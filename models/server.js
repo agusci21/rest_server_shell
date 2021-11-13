@@ -20,8 +20,34 @@ class Server {
   }
 
   routes() {
-    this.app.get('/', (req, res) => {
-      res.send('Hola mundo')
+    // ESTO ES UN ENDPOINT
+
+    this.app.get('/api', (req, res) => {
+      res.json({
+        // ok: true, Resp.body(statusCode = 200) => peticion ok
+        msg: 'Peticion Get a mi API',
+      })
+    })
+
+    this.app.put('/api', (req, res) => {
+      res.json({
+        // ok: true, Resp.body(statusCode = 200) => peticion ok
+        msg: 'Peticion Put a mi API',
+      })
+    })
+
+    this.app.post('/api', (req, res) => {
+      res.json({
+        // ok: true, Resp.body(statusCode = 200) => peticion ok
+        msg: 'Peticion Post a mi API',
+      })
+    })
+
+    this.app.delete('/api', (req, res) => {
+      res.json({
+        // ok: true, Resp.body(statusCode = 200) => peticion ok
+        msg: 'Peticion Delete a mi API',
+      })
     })
   }
 
