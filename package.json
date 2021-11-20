@@ -1,10 +1,10 @@
 {
-  "name": "rest_server",
+  "name": "07-restserver",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index"
+    "start": "node app"
   },
   "keywords": [],
   "author": "",
@@ -12,10 +12,9 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
-    "dotenv": "^10.0.0",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "express-validator": "^6.13.0",
-    "mongoose": "^6.0.13",
-    "nodemon": "^2.0.15"
+    "express-validator": "^6.9.2",
+    "mongoose": "^5.11.15"
   }
 }
