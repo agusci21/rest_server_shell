@@ -1,7 +1,7 @@
 const { response, request } = require('express') // Opcional por la falta de tipado estricto de JS
 const bcryptjs = require('bcryptjs')
 const Usuario = require('../models/usuario')
-const { validationResult } = require('express-validator')
+
 
 const usuariosGet = (req = request, res = (response = response)) => {
   const { a, b, nombre = 'Sin nombre' } = req.query
@@ -17,12 +17,7 @@ const usuariosPost = async (req, res) => {
   const { nombre, correo, password, rol } = req.body
   const usuario = new Usuario({ nombre, correo, password, rol })
 
-  const errors = validationResult(req)
-  if (!errors.isEmpty()) {
-    return res.status(400).json({
-      errors,
-    })
-  }
+  
 
   const existeEmail = await Usuario.findOne({ correo })
   if (existeEmail) {
