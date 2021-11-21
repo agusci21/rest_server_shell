@@ -14,7 +14,6 @@ const { usuariosGet,
 
 const router = Router();
 
-
 router.get('/', usuariosGet );
 
 router.put('/:id',[
