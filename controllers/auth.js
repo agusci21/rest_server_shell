@@ -1,9 +1,11 @@
-const { response, request } = require('express')
+const { response, request, json } = require('express')
 const bcryptjs = require('bcryptjs')
 
 const Usuario = require('../models/usuario')
 
 const { generarJWT } = require('../helpers/generar-jwt')
+const { googleVerify } = require('../helpers/google-verify')
+const usuario = require('../models/usuario')
 
 const login = async (req, res = response) => {
   const { correo, password } = req.body
@@ -49,10 +51,47 @@ const login = async (req, res = response) => {
 
 const googleSignIn = async (req = request, res = response) => {
   const { id_token } = req.body
-  res.json({
-    msg: 'SAlio Bien',
-    id_token,
-  })
+
+  try {
+    //const googleUser = await googleVerify(id_token)
+    const { nombre, img, correo } = await googleVerify(id_token)
+    //console.log(nombre, img, correo)
+
+    let usuario = await Usuario.findOne({ correo })
+
+    if (!usuario) {
+      const data = {
+        nombre,
+        correo,
+        password: '',
+        rol: 'USER_ROLE',
+        img,
+        google: true,
+      }
+
+      usuario = new Usuario(data)
+      usuario.save()
+    }
+
+    if (!usuario.estado) {
+      return res.status(400).json({
+        msg: 'Usuario ya borrado',
+      })
+    }
+
+    const token = await generarJWT(usuario.id)
+
+    res.json({
+      usuario,
+      token,
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(400).json({
+      ok: false,
+      msg: 'El token es inverificable',
+    })
+  }
 }
 
 module.exports = {
