@@ -1,59 +1,61 @@
-const { response } = require('express');
+const { response, request } = require('express')
 const bcryptjs = require('bcryptjs')
 
-const Usuario = require('../models/usuario');
+const Usuario = require('../models/usuario')
 
-const { generarJWT } = require('../helpers/generar-jwt');
+const { generarJWT } = require('../helpers/generar-jwt')
 
+const login = async (req, res = response) => {
+  const { correo, password } = req.body
 
-const login = async(req, res = response) => {
+  try {
+    // Verificar si el email existe
+    const usuario = await Usuario.findOne({ correo })
+    if (!usuario) {
+      return res.status(400).json({
+        msg: 'Usuario / Password no son correctos - correo',
+      })
+    }
 
-    const { correo, password } = req.body;
+    // SI el usuario está activo
+    if (!usuario.estado) {
+      return res.status(400).json({
+        msg: 'Usuario / Password no son correctos - estado: false',
+      })
+    }
 
-    try {
-      
-        // Verificar si el email existe
-        const usuario = await Usuario.findOne({ correo });
-        if ( !usuario ) {
-            return res.status(400).json({
-                msg: 'Usuario / Password no son correctos - correo'
-            });
-        }
+    // Verificar la contraseña
+    const validPassword = bcryptjs.compareSync(password, usuario.password)
+    if (!validPassword) {
+      return res.status(400).json({
+        msg: 'Usuario / Password no son correctos - password',
+      })
+    }
 
-        // SI el usuario está activo
-        if ( !usuario.estado ) {
-            return res.status(400).json({
-                msg: 'Usuario / Password no son correctos - estado: false'
-            });
-        }
+    // Generar el JWT
+    const token = await generarJWT(usuario.id)
 
-        // Verificar la contraseña
-        const validPassword = bcryptjs.compareSync( password, usuario.password );
-        if ( !validPassword ) {
-            return res.status(400).json({
-                msg: 'Usuario / Password no son correctos - password'
-            });
-        }
-
-        // Generar el JWT
-        const token = await generarJWT( usuario.id );
-
-        res.json({
-            usuario,
-            token
-        })
-
-    } catch (error) {
-        console.log(error)
-        res.status(500).json({
-            msg: 'Hable con el administrador'
-        });
-    }   
-
+    res.json({
+      usuario,
+      token,
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      msg: 'Hable con el administrador',
+    })
+  }
 }
 
-
+const googleSignIn = async (req = request, res = response) => {
+  const { id_token } = req.body
+  res.json({
+    msg: 'SAlio Bien',
+    id_token,
+  })
+}
 
 module.exports = {
-    login
+  login,
+  googleSignIn,
 }
