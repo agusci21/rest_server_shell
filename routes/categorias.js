@@ -12,31 +12,27 @@ router.get('/', (req, res) => {
 })
 
 router.get('/:id', (req, res) => {
-    res.status(200).json({
-      msg: 'Get',
-    })
+  res.status(200).json({
+    msg: 'Get',
   })
+})
 
-  router.post('/', (req, res) => {
-    res.status(200).json({
-      msg: 'post',
-    })
+router.post('/', (req, res) => {
+  res.status(200).json({
+    msg: 'post',
   })
+})
 
-  router.put('/:id', (req, res) => {
-    res.status(200).json({
-      msg: 'put',
-    })
+router.put('/:id', (req, res) => {
+  res.status(200).json({
+    msg: 'put',
   })
+})
 
-  router.delete('/:id', (req, res) => {
-    res.status(200).json({
-      msg: 'delete',
-    })
+router.delete('/:id', (req, res) => {
+  res.status(200).json({
+    msg: 'delete',
   })
-
-
-
-
+})
 
 module.exports = router
