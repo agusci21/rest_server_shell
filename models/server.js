@@ -9,9 +9,9 @@ class Server {
     this.port = process.env.PORT
 
     this.paths = {
-      auth: '/api/usuarios',
+      auth: '/api/auth',
       categorias: '/api/categorias',
-      usuarios: '/api/auth',
+      usuarios: '/api/usuarios',
     }
 
     // Conectar a base de datos

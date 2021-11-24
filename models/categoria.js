@@ -4,6 +4,7 @@ const CategoriaSchema = Schema({
   nombre: {
     type: String,
     required: [true, 'El Nombre es obligatorio'],
+    unique: true,
   },
 
   estado: {

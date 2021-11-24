@@ -1,7 +1,9 @@
 const { Router } = require('express')
 const { check } = require('express-validator')
+const { crearCategorias } = require('../controllers/categorias')
+const { validarJWT } = require('../middlewares')
 
-const { validarCampos } = require('../middlewares/validar-campos')
+const { validarCampos } = require('../middlewares/')
 
 const router = Router()
 
@@ -17,11 +19,15 @@ router.get('/:id', (req, res) => {
   })
 })
 
-router.post('/', (req, res) => {
-  res.status(200).json({
-    msg: 'post',
-  })
-})
+router.post(
+  '/',
+  [
+    validarJWT,
+    check('nombre', 'El nombre es Obligatorio').not().isEmpty(),
+    validarCampos,
+  ],
+  crearCategorias,
+)
 
 router.put('/:id', (req, res) => {
   res.status(200).json({
