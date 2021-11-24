@@ -4,9 +4,11 @@ const {
   crearCategorias,
   obtenerCategorias,
   obtenerCategoria,
+  actualizarCategoria,
+  borrarCategoria,
 } = require('../controllers/categorias')
 const { existeCategoriaPorId } = require('../helpers/db-validators')
-const { validarJWT } = require('../middlewares')
+const { validarJWT, esAdminRole } = require('../middlewares')
 
 const { validarCampos } = require('../middlewares/')
 
@@ -34,16 +36,27 @@ router.post(
   crearCategorias,
 )
 
-router.put('/:id', (req, res) => {
-  res.status(200).json({
-    msg: 'put',
-  })
-})
+router.put(
+  '/:id',
+  [
+    validarJWT,
+    check('nombre', 'El nombre es Obligatorio').not().isEmpty(),
+    check('id').custom(existeCategoriaPorId),
+    validarCampos,
+  ],
+  actualizarCategoria,
+)
 
-router.delete('/:id', (req, res) => {
-  res.status(200).json({
-    msg: 'delete',
-  })
-})
+router.delete(
+  '/:id',
+  [
+    validarJWT,
+    esAdminRole,
+    check('id', 'No es un ID Valido').isMongoId(),
+    check('id').custom(existeCategoriaPorId),
+    validarCampos,
+  ],
+  borrarCategoria,
+)
 
 module.exports = router

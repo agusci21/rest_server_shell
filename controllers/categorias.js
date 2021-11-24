@@ -47,4 +47,33 @@ const crearCategorias = async (req, res = response) => {
   res.status(201).json(categoria)
 }
 
-module.exports = { crearCategorias, obtenerCategorias, obtenerCategoria }
+const actualizarCategoria = async (req, res = response) => {
+  const { id } = req.params
+  const { estado, usuario, ...data } = req.body
+
+  data.nombre = data.nombre.toUpperCase()
+  data.usuario = req.usuario._id
+  const categoria = await Categoria.findByIdAndUpdate(id, data, { new: true })
+
+  res.json(categoria)
+}
+
+const borrarCategoria = async (req, res = response) => {
+  const { id } = req.params
+  const categoriaBorrada = await Categoria.findByIdAndUpdate(
+    id,
+    {
+      estado: false,
+    },
+    { new: true },
+  )
+  res.json(categoriaBorrada)
+}
+
+module.exports = {
+  crearCategorias,
+  obtenerCategorias,
+  obtenerCategoria,
+  actualizarCategoria,
+  borrarCategoria,
+}
