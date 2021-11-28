@@ -13,8 +13,20 @@ const cargarArchivo = (req, res = response) => {
   }
 
   const { archivo } = req.files
+  const nombreCortado = archivo.name.split('.')
+  const extencion = nombreCortado[nombreCortado.length - 1]
 
-  const uploadPath = path.join(__dirname, '../uploads/' + archivo.name)
+  const extencionesValidas = ['png', 'jpg', 'jpeg', 'gif']
+
+  if (!extencionesValidas.includes(extencion)) {
+    return res.status(400).json({
+      msg: `La extencion ${extencion} no es permitida, Las extenciones validas son: ${extencionesValidas}`,
+    })
+  }
+
+  res.json({ extencion })
+
+  /*const uploadPath = path.join(__dirname, '../uploads/' + archivo.name)
 
   archivo.mv(uploadPath, (err) => {
     if (err) {
@@ -22,7 +34,7 @@ const cargarArchivo = (req, res = response) => {
     }
 
     res.json({msg: 'Archivo subido a: ' + uploadPath})
-  })
+  })*/
 }
 
 module.exports = { cargarArchivo }
