@@ -25,7 +25,6 @@ const cargarArchivo = async (req, res = response) => {
 
 const actualizarImagen = async (req, res = response) => {
   const { coleccion, id } = req.params
-  const { archivo } = req.body
 
   let modelo
   switch (coleccion) {
@@ -72,4 +71,46 @@ const actualizarImagen = async (req, res = response) => {
   return res.json(modelo)
 }
 
-module.exports = { cargarArchivo, actualizarImagen }
+const mostrarImagen = async (req, res = response) => {
+  const { coleccion, id } = req.params
+
+  let modelo
+  switch (coleccion) {
+    case 'usuarios':
+      modelo = await Usuario.findById(id)
+
+      if (!modelo) {
+        return res.status(400).json({
+          msg: `No existe un usuario con ID: ${id}`,
+        })
+      }
+
+      break
+
+    case 'productos':
+      modelo = await Producto.findById(id)
+
+      if (!modelo) {
+        return res.status(400).json({
+          msg: `No existe un producto con ID: ${id}`,
+        })
+      }
+      break
+
+    default:
+      return res.status(500).json({
+        msg: 'No se ha validado esto',
+      })
+      break
+  }
+
+  if (modelo.img) {
+    const pathImagen = path.join(__dirname, '../uploads', coleccion, modelo.img)
+    if (fs.existsSync(pathImagen)) {
+      return res.sendFile(pathImagen)
+    }
+  }
+  res.json({ msg: 'falta placeholder' })
+}
+
+module.exports = { cargarArchivo, actualizarImagen, mostrarImagen }
