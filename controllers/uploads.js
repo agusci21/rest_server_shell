@@ -1,3 +1,6 @@
+const path = require('path')
+const fs = require('fs')
+
 const { response } = require('express')
 const { model } = require('mongoose')
 const { subirArchivo } = require('../helpers')
@@ -23,7 +26,6 @@ const cargarArchivo = async (req, res = response) => {
 const actualizarImagen = async (req, res = response) => {
   const { coleccion, id } = req.params
   const { archivo } = req.body
-
 
   let modelo
   switch (coleccion) {
@@ -53,6 +55,13 @@ const actualizarImagen = async (req, res = response) => {
         msg: 'No se ha validado esto',
       })
       break
+  }
+
+  if (modelo.img) {
+    const pathImagen = path.join(__dirname, '../uploads', coleccion, modelo.img)
+    if (fs.existsSync(pathImagen)) {
+      fs.unlinkSync(pathImagen)
+    }
   }
 
   const nombre = await subirArchivo(req.files, undefined, coleccion)
