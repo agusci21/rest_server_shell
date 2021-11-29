@@ -22,6 +22,8 @@ const cargarArchivo = async (req, res = response) => {
 
 const actualizarImagen = async (req, res = response) => {
   const { coleccion, id } = req.params
+  const { archivo } = req.body
+
 
   let modelo
   switch (coleccion) {
